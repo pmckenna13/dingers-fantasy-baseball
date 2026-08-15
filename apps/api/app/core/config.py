@@ -17,7 +17,11 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://fantasy:fantasy@localhost:5432/fantasy_baseball"
     redis_url: str = "redis://localhost:6379/0"
 
-    jwt_secret_key: str = "dev-only-secret-change-me"
+    # No default: this repo is public, so a hardcoded fallback here would be
+    # a known-to-everyone JWT signing secret. Must come from the environment
+    # (.env locally, CI secrets in CI, Secrets Manager in real deployments) —
+    # missing it should fail startup loudly, not sign tokens with a public value.
+    jwt_secret_key: str
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
